@@ -1,0 +1,14 @@
+#!/bin/bash
+
+
+
+
+basic_title="基本信息录入"
+basic_backtitle="基本配置"
+basic_formtitle="配置项列表"
+basic_msg="HeartBeat未安装或安装不正确，无法进行配置!"
+basic_cancel_label="返回"
+
+
+write_title="保存配置"
+write_msg="正在写入配置文件..."

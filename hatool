@@ -1,0 +1,81 @@
+#!/bin/bash
+
+
+export DIALOGRC=conf/dialogrc
+
+item="conf/main/item"
+declare -a modules 
+load_module()
+{
+	for module in module/{basic.cfg,monit.cfg,email.cfg,sync.cfg}
+	do
+		value=$(grep module_name $module | cut -d'=' -f2 | tr '"' ' ')	
+		modules[i]=$value
+		let i=i+1
+		source $module
+	done
+        (
+                PERCENT=0
+                while true
+                do
+                        if [ $PERCENT -gt 100 ];then
+                                break
+                        else
+                                echo $PERCENT
+                        fi
+                        let PERCENT=PERCENT+1
+                        sleep 0.01
+                done
+        ) | dialog --gauge "正在初始化模块..." 10 100 0
+
+}
+
+generate_module_list()
+{
+	for I in `seq ${#modules[@]}`
+	do 
+		echo "$I ${modules[I-1]}" 
+	done
+}
+_exit()
+{
+	dialog --clear --no-shadow --colors --yesno "你确定退出吗？" 10 100
+	return $?
+}
+load_module
+main_interface()
+{
+	item=$(dialog --cancel-label "退出"\
+       	       --backtitle "数字天堂HA双机配置工具" \
+               --title "双机配置工具" \
+	       --stdout \
+               --menu  "配置项列表" 20 100 ${#modules[@]}  \
+				$(generate_module_list) \
+	)
+	case $? in
+             '0')
+		case "$item" in
+		    '1')
+			start_basic_config
+			;;
+		    '2')
+			start_monit_config 
+			;;
+		    '3')
+			start_email_config
+			;;
+		    '4')
+			start_sync_config
+			;;
+		esac 
+		;;
+	     '1')
+		 _exit
+		[ $? -eq 0 ] && exit 0 
+		[ $? -eq 1 ] && main_interface
+		;;
+	esac		
+}
+
+main_interface
+exit 0
