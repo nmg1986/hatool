@@ -1,6 +1,10 @@
 #!/bin/bash
 
 
+if ! which dialog > /dev/null 2>&1;then
+	echo "dialog command must be installed first,exit..."
+	exit 1
+fi
 export DIALOGRC=conf/dialogrc
 
 item="conf/main/item"
