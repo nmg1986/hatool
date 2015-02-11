@@ -50,8 +50,8 @@ load_module
 main_interface()
 {
 	item=$(dialog --cancel-label "退出"\
-       	       --backtitle "数字天堂HA双机配置工具" \
-               --title "双机配置工具" \
+       	       --backtitle "数字天堂双机热备配置工具" \
+               --title "双机热备配置工具" \
 	       --stdout \
                --menu  "配置项列表" 20 100 ${#modules[@]}  \
 				$(generate_module_list) \
